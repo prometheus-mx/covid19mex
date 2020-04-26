@@ -202,7 +202,12 @@ def deaths(request):
                 "COUNT(CASE WHEN DIABETES = 1 THEN 1 END) AS DIABETES, "
                 "COUNT(CASE WHEN INTUBADO = 1 THEN 1 END) AS INTUBADO, "
                 "COUNT(CASE WHEN TABAQUISMO = 1 THEN 1 END) AS TABAQUISMO, "
-                "COUNT(CASE WHEN EMBARAZO = 1 THEN 1 END) AS EMBARAZO "
+                "COUNT(CASE WHEN EMBARAZO = 1 THEN 1 END) AS EMBARAZO, "
+                "COUNT(CASE WHEN OBESIDAD <> 1 AND DIABETES <> 1 AND HIPERTENSION <> 1 "
+                "AND TABAQUISMO <> 1 AND EPOC <> 1 AND ASMA <> 1 "
+                "AND INMUSUPR <> 1 AND OBESIDAD <> 1 AND OTRA_COM <> 1 "
+                "AND CARDIOVASCULAR <> 1 AND RENAL_CRONICA <> 1 AND OTRO_CASO <> 1 "
+                "AND EDAD < 60 THEN 1 END) AS 'SIN CONDICIONES' "
                 "FROM datos_abiertos_MX WHERE RESULTADO = 1 AND FECHA_DEF <> '9999-99-99'")
     col_names = list(map(lambda x: x[0], cur.description))
     for row in cur:
