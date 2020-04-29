@@ -230,6 +230,10 @@ def deaths(request):
             cats2.append(col_names[i])
             v_cats2.append(row[i])
 
+    cur.execute("SELECT count(*) as NEUMONIA_DEATHS FROM datos_abiertos_MX d " +
+                "WHERE RESULTADO <> 1 AND NEUMONIA = 1 AND FECHA_DEF <> '9999-99-99'")
+    neumonia_deaths = cur.fetchall()[0][0]
+
     cur.close()
     conn.close()
     for i, v in enumerate(rango_de_edad):
@@ -269,7 +273,7 @@ def deaths(request):
                "cats2": cats2, 'v_cats2': v_cats2, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da,
                'n_total': sum(values), 'edos_compara': edos_compara, 'v_compara': v_compara, 'dt_compara': dt_compara,
-               'n_sum_difs': round(sum(difs_compara))}
+               'n_sum_difs': round(sum(difs_compara)), 'neumonia_deaths': neumonia_deaths}
     return render(request, 'deaths.html', context=context)
 
 def index(request):
