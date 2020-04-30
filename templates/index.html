@@ -16,6 +16,7 @@
                   <!-- Highcharts display -->
           <div class="border" id="container_totals" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
           <div class="border" id="container_fechas" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	      <div class="col-md-6" id="cont_cats" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 <!--          <div class="border" id="container_fechas2" style="min-width: 800px; height: 450px; margin: 0 auto"></div>-->
 
 <!--                  <p class="success">
@@ -38,15 +39,22 @@ _v_fechas = {{v_fechas|safe}}
 _v_totals = {{v_totals|safe}}
 _fechas2 = {{fechas2|safe}};
 _v_fechas2 = {{v_fechas2|safe}};
+_cats = {{cats|safe}};
+_v_cats = {{v_cats|safe}};
 _dt = "{{dt|safe}}"
 _dt_ecdc = "{{dt_ecdc|safe}}"
+
 _case_type = ""
+_colors_rango_de_edad = ['#C70039', '#900C3F', '#E74C3C'];
+
     </script>
 
 
     <script src="/static/scripts/main.js"></script>
     <script src="/static/charts/por_totals.js" container="container_totals" i_totals="1"></script>
     <script src="/static/charts/por_fechas.js" container="container_fechas" i_totals="1"></script>
+     <script src="/static/charts/por_cats.js" chart_title="Días entre síntomas y deceso"
+     chart_subtitle=" - según datos abiertos de la SSA"></script>
 <!--    <script src="/static/charts/por_fechas2.js"></script>-->
 
 {% endblock content %}

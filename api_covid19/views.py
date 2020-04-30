@@ -318,6 +318,16 @@ def index(request):
         cases_totals.append(rows[0][0])
         deaths_totals.append(rows[0][1])
         fechas.append(fechas[len(fechas)-1] + datetime.timedelta(days=1))
+
+    cur.execute("SELECT julianday(FECHA_DEF) - julianday(FECHA_SINTOMAS) as DAYS_TO_DEATH, count(*) "
+                "FROM datos_abiertos_MX WHERE RESULTADO = 1 AND FECHA_DEF <> '9999-99-99' and DAYS_TO_DEATH >= 0 "
+                "group by DAYS_TO_DEATH order by DAYS_TO_DEATH DESC")
+    cats = []
+    v_cats = []
+    for row in cur:
+        cats.append(row[0])
+        v_cats.append(row[1])
+
     cur.close()
     conn.close()
 
@@ -348,7 +358,7 @@ def index(request):
     v_totals = [{'name': 'Confirmados', 'data': cases_totals}, {'name': 'Decesos', 'data': deaths_totals}]
 
     context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': [], 'v_fechas2': [],
-               'v_totals': v_totals,
+               'v_totals': v_totals, "cats": cats, 'v_cats': v_cats,
                'file_name': ecdc_file, 'file_name2': file_da, 'dt': dt_da, 'dt_ecdc': ecdc_date}
     return render(request, 'index.html', context=context)
 
