@@ -161,6 +161,13 @@ def run():
     datos_abiertos = 'api_covid19/' + to_path + datetime.today().strftime("%y%m%d") + 'COVID19MEXICO.csv'
     if os.path.exists(datos_abiertos):
         print(f'{datos_abiertos} ya existía')
+
+        import sqlite3
+        conn = sqlite3.connect("covid19mx.db")
+        df = pandas.read_csv(datos_abiertos, encoding = "latin")
+        df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
+        print("Datos Abiertos copiados a SQLLITE")
+        conn.close()
     else:
         da_url = f"http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip"
         da_filename = "tmp_datos_abiertos_covid19.zip"
