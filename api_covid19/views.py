@@ -37,6 +37,12 @@ def update_dates():
     else:
         file_da = f"20{ant_dia}COVID19MEXICO.csv"
         dt_da = ant_dia_ext
+    print(dia_punto)
+    print(ecdc_date)
+    print(ecdc_file)
+    print(dia)
+    print(file_da)
+    print(dt_da)
 
 def confirmed(request):
     update_dates()
