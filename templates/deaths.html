@@ -9,7 +9,7 @@
           <h4 style="opacity: 0.5;"><i><span style="color:#C70039">{{neumonia_deaths}}</span> muertes por Neumonía
               con registro negativo o pendiente de COVID-19</i></h4>
 
-<!--          <h4 style="opacity: 0.5;"><i><span style="color:#C70039">{{n_sum_difs}}</span> adicionales reportados por varios estados</i></h4>-->
+<!--         <h4 style="opacity: 0.5;"><i><span style="color:#C70039">{{n_sum_difs}}</span> adicionales reportados por varios estados</i></h4>-->
         <span>Fuente:
             <a href="/static/files/{{file_da}}">{{file_da}}</a>
             (<a target="_otra" href="https://www.gob.mx/salud/documentos/datos-abiertos-152127">Datos abiertos @ GOBMX</a>)</span>
@@ -17,21 +17,20 @@
 <br>
 
         <div class="row">
-                <p class="warning">Al 28 de abril, la red consular reporta <b>566</b> mexicanos muertos por COVID-19 en <b>Estados
+                <p class="warning">Al 5 de mayo, la red consular reporta <b>661</b> mexicanos muertos por COVID-19 en <b>Estados
                     Unidos</b>.<small>
-                    <a target="_otra" href="https://www.proceso.com.mx/627683/son-ya-566-los-mexicanos-muertos-en-eu-por-covid-19-sre">
-                    Proceso</a></small>
+                    <a target="_otra" href="https://www.jornada.com.mx/ultimas/politica/2020/05/05/suman-661-mexicanos-muertos-por-covid-19-en-eu-8614.html">
+                    La Jornada</a></small>
      </p>
 
         </div>
       <div class="row">
                   <!-- Highcharts display -->
 	  <div class="col-md-6" id="container" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
-<!--	  <div class="col-md-6" id="container_compara" style="min-width: 800px; height: 450px; margin: 0 auto"></div>-->
 	  <div class="col-md-6" id="container_rango_de_edad" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="col-md-6" id="cont_cats" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="col-md-6" id="container_edad_genero" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
-
+	  <div class="col-md-6" id="container_compara" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 
       </div>
 
@@ -66,7 +65,7 @@ _dt_compara = "{{dt_compara|safe}}";
     <script src="/static/scripts/main.js"></script>
 
     <script src="/static/charts/por_estado.js"></script>
-<!--    <script src="/static/charts/por_estado_compara.js"></script>-->
+    <script src="/static/charts/por_estado_compara.js"></script>
     <script src="/static/charts/por_rango_de_edad.js"></script>
      <script src="/static/charts/por_cats.js" chart_title="Características de los DECESOS (no excluyentes)"
      chart_subtitle=" - Cada deceso puede estar en más de una columna"></script>
