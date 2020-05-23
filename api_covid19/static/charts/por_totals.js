@@ -33,6 +33,13 @@ tooltip: {
       useHTML: true
 },
 plotOptions: {
+      area: {
+          pointPadding: 0.2,
+          borderWidth: 0
+          ,marker: {
+                radius: 2
+            }
+        },
       column: {
           pointPadding: 0.2,
           borderWidth: 0

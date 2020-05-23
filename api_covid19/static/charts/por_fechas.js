@@ -7,7 +7,7 @@ Highcharts.chart(document.currentScript.getAttribute('container'), {
     chart: {
         type: 'area'
     },
-    colors: ['#FFC300', '#C70039'],
+    colors: ['#FFC300', '#EB6114', '#C70039', 'black'],
 title: {
       text: 'Casos registrados' + _case_type + ' por dia'
 },
@@ -16,7 +16,7 @@ subtitle: {
 },
 xAxis: {
       categories: _fechas,
-      crosshair: true
+      crosshair: false
 },
 yAxis: {
       min: 0,
@@ -33,9 +33,18 @@ tooltip: {
       useHTML: true
 },
 plotOptions: {
-      column: {
+      area: {
           pointPadding: 0.2,
           borderWidth: 0
+          ,marker: {
+                radius: 2
+            }
+        },
+        line: {
+        marker: {
+            enabled: false,
+                radius: 1
+            }
         },
         series: {
             dataLabels: {

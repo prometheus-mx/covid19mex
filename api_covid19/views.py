@@ -291,7 +291,7 @@ def index(request):
     df = df[df['countryterritoryCode'].str.contains("MEX")]
     df = df[df['cases'] > 0]
     df['dateRep'] = pd.to_datetime(df['dateRep'], format='%d/%m/%Y')
-    df['dateRep'] = df['dateRep']  + datetime.timedelta(days=-1)
+    df['dateRep'] = df['dateRep'] + datetime.timedelta(days=-1)
     fechas = df['dateRep'].tolist()
     fechas.reverse()
     cases = df['cases'].tolist()
@@ -355,9 +355,14 @@ def index(request):
     #              'stops': [ [0, '#FFDD33'], [1, 'white'] ]
     #             }}]}]
 
+    cases_avg = avg(cases, 7)
+    deaths_avg = avg(deaths, 7)
     cases[len(cases)-1] = {"y": cases[len(cases)-1], "dataLabels":{"enabled":"true"}}
     deaths[len(deaths)-1] = {"y": deaths[len(deaths)-1], "dataLabels":{"enabled":"true"}}
-    v_fechas = [{'name': 'Confirmados', 'data': cases}, {'name': 'Decesos', 'data': deaths}]
+    v_fechas = [{'name': 'Confirmados', 'data': cases},
+                {'name': 'Conf Prom 7 Días', 'type': 'line', 'marker': {'enabled': 'false'}, 'data': cases_avg},
+                {'name': 'Decesos', 'data': deaths},
+                {'name': 'Dec Prom 7 Días', 'type': 'line', 'marker': {'enabled': 'false'}, 'data': deaths_avg}]
 
     cases_totals[len(cases_totals)-1] = {"y": cases_totals[len(cases_totals)-1], "dataLabels":{"enabled":"true"}}
     deaths_totals[len(deaths_totals)-1] = {"y": deaths_totals[len(deaths_totals)-1], "dataLabels":{"enabled":"true"}}
@@ -367,6 +372,20 @@ def index(request):
                'v_totals': v_totals, "cats": cats, 'v_cats': v_cats,
                'file_name': ecdc_file, 'file_name2': file_da, 'dt': dt_da, 'dt_ecdc': ecdc_date}
     return render(request, 'index.html', context=context)
+
+
+def avg(orig, n):
+    new = []
+    for i, v in enumerate(orig):
+        suma = 0
+        e = 0
+        for j in range(min(n, i)):
+            print(f'j:{j}')
+            print(f'i:{i}')
+            e += 1
+            suma += orig[int(i)-int(j)]
+        new.append(int(suma / e) if e > 0 else 0)
+    return new
 
 def last_origin(request):
     dt = "7 de abril de 2020"
