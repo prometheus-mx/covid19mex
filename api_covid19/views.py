@@ -380,8 +380,6 @@ def avg(orig, n):
         suma = 0
         e = 0
         for j in range(min(n, i)):
-            print(f'j:{j}')
-            print(f'i:{i}')
             e += 1
             suma += orig[int(i)-int(j)]
         new.append(int(suma / e) if e > 0 else 0)
