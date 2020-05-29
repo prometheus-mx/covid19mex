@@ -373,7 +373,6 @@ def index(request):
                'file_name': ecdc_file, 'file_name2': file_da, 'dt': dt_da, 'dt_ecdc': ecdc_date}
     return render(request, 'index.html', context=context)
 
-
 def avg(orig, n):
     new = []
     for i, v in enumerate(orig):
