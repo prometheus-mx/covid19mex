@@ -7,7 +7,7 @@ Highcharts.chart(document.currentScript.getAttribute('container'), {
     chart: {
         type: 'area'
     },
-    colors: ['#FFC300', '#EB6114', '#C70039', 'black'],
+    colors: ['#FFC300', '#EB6114', '#C70039', 'black', 'blue'],
 title: {
       text: 'Casos registrados' + _case_type + ' por dia'
 },

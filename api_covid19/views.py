@@ -334,6 +334,28 @@ def index(request):
         cats.append(row[0])
         v_cats.append(row[1])
 
+    cur.execute("SELECT FECHA_DEF, COUNT(*) FROM datos_abiertos_MX WHERE RESULTADO = 1 AND FECHA_DEF <> '9999-99-99' "
+                "GROUP BY FECHA_DEF ORDER BY FECHA_DEF")
+    rows = cur.fetchall()
+    deaths_by_date = []
+    i_cur = 0
+    pre_total = 0
+    while pd.to_datetime(fechas[0]) > pd.to_datetime(rows[i_cur][0]):
+        #print(f'PRE---{pd.to_datetime(fechas[0])}---{pd.to_datetime(rows[i_cur][0])}---{rows[i_cur][1]}')
+        pre_total += rows[i_cur][1]
+        i_cur += 1
+
+    for i, v in enumerate(fechas):
+        #print(f'{pd.to_datetime(v)}---{pd.to_datetime(rows[i_cur][0])}---{rows[i_cur][1]}')
+        if pre_total > 0:
+            deaths_by_date.append(pre_total)
+            pre_total = 0
+        elif pd.to_datetime(v) == pd.to_datetime(rows[i_cur][0]):
+            deaths_by_date.append(rows[i_cur][1])
+            i_cur += 1
+        else:
+            deaths_by_date.append(0)
+
     cur.close()
     conn.close()
 
@@ -362,7 +384,8 @@ def index(request):
     v_fechas = [{'name': 'Confirmados', 'data': cases},
                 {'name': 'Conf Prom 7 Días', 'type': 'line', 'marker': {'enabled': 'false'}, 'data': cases_avg},
                 {'name': 'Decesos', 'data': deaths},
-                {'name': 'Dec Prom 7 Días', 'type': 'line', 'marker': {'enabled': 'false'}, 'data': deaths_avg}]
+                {'name': 'Dec Prom 7 Días', 'type': 'line', 'marker': {'enabled': 'false'}, 'data': deaths_avg},
+                {'name': 'Por Fecha Defunción', 'type': 'line', 'marker': {'enabled': 'false'}, 'data': deaths_by_date}]
 
     cases_totals[len(cases_totals)-1] = {"y": cases_totals[len(cases_totals)-1], "dataLabels":{"enabled":"true"}}
     deaths_totals[len(deaths_totals)-1] = {"y": deaths_totals[len(deaths_totals)-1], "dataLabels":{"enabled":"true"}}
