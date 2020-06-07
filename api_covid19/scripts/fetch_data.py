@@ -162,12 +162,29 @@ def run():
     if os.path.exists(datos_abiertos):
         print(f'{datos_abiertos} ya existía')
 
-        import sqlite3
-        conn = sqlite3.connect("covid19mx.db")
         df = pandas.read_csv(datos_abiertos, encoding = "latin")
-        df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
-        print("Datos Abiertos copiados a SQLLITE")
-        conn.close()
+
+        # import sqlite3
+        # conn = sqlite3.connect("covid19mx.db")
+        # df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
+        # print("Datos Abiertos copiados a SQLLITE")
+        # conn.close()
+
+        from sqlalchemy import create_engine
+        import pyodbc
+        import urllib
+#{ODBC Driver 13 for SQL Server}
+        params = urllib.parse.quote_plus(r'Driver={ODBC Driver 13 for SQL Server};Server=tcp:csoriano.database.windows.net,1433;Database=covid19mx;Uid=csoriano;Pwd={d8c0b1d+};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;')
+        conn_str = 'mssql+pyodbc:///?odbc_connect={}'.format(params)
+        engine = create_engine(conn_str, echo=True)
+
+        #engine = create_engine('mssql+pyodbc://csoriano:d8c0b1d+@csoriano.database.windows.net:1433/covid19mx?driver=SQL+Server+Native+Client+10.0')
+        #engine = create_engine("mssql+pyodbc://csoriano:d8c0b1d@csoriano.database.windows.net:1433/covid19mx?driver=ODBC+Driver+13+for+SQL+Server")
+        df.to_sql("datos_abiertos_MX", engine, if_exists='replace', index='id')
+        engine.close()
+
+        print("Datos Abiertos copiados a la BD")
+
     else:
         da_url = f"http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip"
         da_filename = "tmp_datos_abiertos_covid19.zip"
@@ -180,15 +197,29 @@ def run():
         datos_abiertos = 'api_covid19/' + to_path + da_file
         print("Datos Abiertos File = " + datos_abiertos)
         os.remove('api_covid19/' + to_path + da_filename)
-
-        import sqlite3
-        conn = sqlite3.connect("covid19mx.db")
         df = pandas.read_csv(datos_abiertos, encoding = "latin")
-        df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
-        print("Datos Abiertos copiados a SQLLITE")
-        conn.close()
 
-    run_prev()
+#        import sqlite3
+#        conn = sqlite3.connect("covid19mx.db")
+#        df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
+#        engine.close()
+        from sqlalchemy import create_engine
+        import pyodbc
+
+        # db = {'servername': 'tcp:csoriano.database.windows.net,1433',
+        #       'database': 'covid19mx',
+        #       'driver': 'driver=SQL Server Native Client 11.0'}
+
+        engine = create_engine('mssql+pyodbc://csoriano:d8c0b1d+@csoriano.database.windows.net:1433/covid19mx?driver=SQL+Server+Native+Client+10.0')
+        # create the connection
+        # engine = create_engine('mssql+pyodbc://' + db['servername'] + '/' + db['database'] + "?" + db['driver'])
+
+        df.to_sql("datos_abiertos_MX", engine, if_exists='replace', index='id')
+        engine.close()
+
+        print("Datos Abiertos copiados a la BD")
+
+#    run_prev()
 
 if __name__ == '__main__':
     run()
