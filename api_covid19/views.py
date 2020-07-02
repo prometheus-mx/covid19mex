@@ -8,7 +8,7 @@ import math
 
 files_path = "api_covid19/static/files/"
 today = datetime.date.today()
-dia_ext = today.strftime("%d") + " de junio"
+dia_ext = today.strftime("%d") + " de julio"
 dia_punto = today.strftime("%m.%d")
 dia = today.strftime("%m%d")
 dt_compara = '3 de mayo'
@@ -22,7 +22,7 @@ dt_da = ""
 def update_dates():
     global ecdc_date, ecdc_file, file_da, dt_da
     yesterday = today - datetime.timedelta(days=1)
-    ant_dia_ext = yesterday.strftime("%d") + " de junio"
+    ant_dia_ext = yesterday.strftime("%d") + " de julio"
     ant_dia_punto = yesterday.strftime("%m.%d")
     ant_dia = yesterday.strftime("%m%d")
     if os.path.exists(files_path + f"ecdc_cases_2020.{dia_punto}.csv"):
@@ -31,7 +31,7 @@ def update_dates():
     else:
         ecdc_date = ant_dia_ext + " (ajustado)"
         ecdc_file = f"ecdc_cases_2020.{ant_dia_punto}.csv"
-    if os.path.exists(files_path + f"20{dia}COVID19MEXICO.csv"):
+    if os.path.exists(files_path + f"20{dia}COVID19MEXICO.csv") or os.path.exists(files_path + f"20{dia}COVID19MEXICO.zip"):
         file_da = f"20{dia}COVID19MEXICO.csv"
         dt_da = dia_ext
     else:
