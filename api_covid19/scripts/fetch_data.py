@@ -1,4 +1,5 @@
 import urllib
+from os.path import basename
 
 import PyPDF2
 import pandas
@@ -13,7 +14,15 @@ import warnings
 from datetime import datetime
 from bs4 import BeautifulSoup
 import zipfile
+try:
+    import zlib
+    compression = zipfile.ZIP_DEFLATED
+except:
+    compression = zipfile.ZIP_STORED
 
+modes = { zipfile.ZIP_DEFLATED: 'deflated',
+          zipfile.ZIP_STORED:   'stored',
+          }
 
 def downloadFile(url, filename, location='files/'):
     """
@@ -141,6 +150,13 @@ def run_prev():
     #     generateCSV(sc_filename)
     #     print(sc_filename + ".csv generado")
 
+def cleandb(conn):
+    cursor = conn.cursor()
+    sql_update_query = """DELETE FROM datos_abiertos_MX WHERE RESULTADO <> 1 AND (NEUMONIA <> 1 OR FECHA_DEF = '9999-99-99')"""
+    cursor.execute(sql_update_query)
+    conn.commit()
+    conn.execute("VACUUM")
+
 def run():
     print("Iniciando")
 
@@ -168,8 +184,17 @@ def run():
         conn = sqlite3.connect("covid19mx.db")
         df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
         print("Datos Abiertos copiados a SQLLITE")
+        cleandb(conn)
         conn.close()
 
+        zf = zipfile.ZipFile(datos_abiertos.replace('.csv', '.zip'), mode='w')
+        try:
+            print('adding ' + datos_abiertos + ' to ZIP -- ', modes[compression])
+            zf.write(datos_abiertos, basename(datos_abiertos), compress_type=compression)
+        finally:
+            zf.close()
+
+        os.remove(datos_abiertos)
 #         from sqlalchemy import create_engine
 #         import pyodbc
 #         import urllib
@@ -183,7 +208,6 @@ def run():
 #         df.to_sql("datos_abiertos_MX", engine, if_exists='replace', index='id')
 #         engine.close()
 
-        print("Datos Abiertos copiados a la BD")
 
     else:
         da_url = f"http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip"
@@ -196,15 +220,17 @@ def run():
 
         datos_abiertos = 'api_covid19/' + to_path + da_file
         print("Datos Abiertos File = " + datos_abiertos)
-        os.remove('api_covid19/' + to_path + da_filename)
         df = pandas.read_csv(datos_abiertos, encoding = "latin")
-
-
 
         import sqlite3
         conn = sqlite3.connect("covid19mx.db")
         df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
+
+        cleandb(conn)
         conn.close()
+
+        os.rename('api_covid19/' + to_path + da_filename, datos_abiertos.replace('.csv', '.zip'))
+        os.remove(datos_abiertos)
 
         from sqlalchemy import create_engine
         import pyodbc
