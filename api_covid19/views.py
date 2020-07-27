@@ -294,6 +294,7 @@ def index(request):
     df['dateRep'] = df['dateRep'] + datetime.timedelta(days=-1)
     fechas = df['dateRep'].tolist()
     fechas.reverse()
+#    print(fechas)
     cases = df['cases'].tolist()
     cases.reverse()
     deaths = df['deaths'].tolist()
@@ -340,21 +341,28 @@ def index(request):
     deaths_by_date = []
     i_cur = 0
     pre_total = 0
+ #   print(rows)
     while pd.to_datetime(fechas[0]) > pd.to_datetime(rows[i_cur][0]):
-        #print(f'PRE---{pd.to_datetime(fechas[0])}---{pd.to_datetime(rows[i_cur][0])}---{rows[i_cur][1]}')
+        print(f'PRE---{pd.to_datetime(fechas[0])}---{pd.to_datetime(rows[i_cur][0])}---{rows[i_cur][1]}')
         pre_total += rows[i_cur][1]
         i_cur += 1
 
     for i, v in enumerate(fechas):
-        #print(f'{pd.to_datetime(v)}---{pd.to_datetime(rows[i_cur][0])}---{rows[i_cur][1]}')
-        if pre_total > 0:
-            deaths_by_date.append(pre_total)
-            pre_total = 0
-        elif pd.to_datetime(v) == pd.to_datetime(rows[i_cur][0]):
-            deaths_by_date.append(rows[i_cur][1])
-            i_cur += 1
-        else:
-            deaths_by_date.append(0)
+#        print(f'{pd.to_datetime(v)}---{pd.to_datetime(rows[i_cur][0])}---{rows[i_cur][1]}')
+        try:
+            if pre_total > 0:
+                deaths_by_date.append(pre_total)
+                pre_total = 0
+            elif pd.to_datetime(v) == pd.to_datetime(rows[i_cur][0]):
+                deaths_by_date.append(rows[i_cur][1])
+                i_cur += 1
+            else:
+                deaths_by_date.append(0)
+        except IndexError:
+            print(f'i_cur={i_cur}')
+            print(f'pd dt={pd.to_datetime(v)}')
+            len(rows)
+
 
     cur.close()
     conn.close()
